@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import app from "./app";
-import config from "./config/index";
+import mongoose from 'mongoose';
+import app from './app';
+import config from './config/index';
 
 async function main() {
   try {
@@ -10,8 +10,8 @@ async function main() {
       console.log(`Application listening on port ${config.port}`);
     });
   } catch (error) {
-    console.log("Failed to connect db", error);
+    console.log('Failed to connect db', error);
   }
 }
 
-main().catch((err) => console.log(err));
+main().catch(err => console.log(err));
