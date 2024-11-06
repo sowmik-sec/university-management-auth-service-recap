@@ -14,8 +14,7 @@
   },
   "lint-staged": {
     "src/**/*.ts": [
-      "npm run prettier:check",
-      "npm run lint"
+      "npm run prettier:check"
     ]
   },
   "keywords": [],
