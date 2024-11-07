@@ -1,18 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { NextFunction, Request, Response } from 'express';
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { ErrorRequestHandler } from 'express';
 import { IGenericErrorMessage } from '../../interfaces/error';
 import config from '../../config';
 import handleValidationError from '../../errors/handleValidationError';
 import ApiError from '../../errors/ApiError';
-import { Error } from 'mongoose';
 
-const globalErrorHandler = (
-  err,
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   let statusCode = 500;
   let message = 'Something went wrong';
   let errorMessages: IGenericErrorMessage[] = [];
