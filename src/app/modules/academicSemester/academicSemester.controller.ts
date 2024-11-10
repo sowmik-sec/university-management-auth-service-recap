@@ -60,10 +60,22 @@ const updateSemester = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const deleteSemester = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  const result = await AcademicSemesterService.deleteSemester(id);
+  sendResponse<IAcademicSemester>(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'Academic Semesters deleted successfully',
+    data: result,
+  });
+});
 
 export const AcademicSemesterController = {
   createSemester,
   getAllSemesters,
   getSingleSemester,
   updateSemester,
+  deleteSemester,
 };
