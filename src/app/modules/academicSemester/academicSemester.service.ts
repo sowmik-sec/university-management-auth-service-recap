@@ -92,7 +92,6 @@ const getAllSemesters = async (
     .skip(skip)
     .limit(limit);
   const total = await AcademicSemester.countDocuments();
-  console.log(result);
   return {
     meta: {
       page,
