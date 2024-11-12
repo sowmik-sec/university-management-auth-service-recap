@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Request, Response } from 'express';
 import sendResponse from '../../../shared/sendResponse';
@@ -49,8 +50,21 @@ const getSingleFaculty = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateFaculty = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const facultyData = req.body;
+  const result = await FacultyService.updateFaculty(id, facultyData);
+  sendResponse<IAcademicFaculty>(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'Faculty updated successfully',
+    data: result,
+  });
+});
+
 export const FacultyController = {
   createFaculty,
   getAllFaculties,
   getSingleFaculty,
+  updateFaculty,
 };
