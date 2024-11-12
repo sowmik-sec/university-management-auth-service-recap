@@ -16,7 +16,7 @@ const updateFacultyZodSchema = z.object({
   }),
 });
 
-export const UserValidation = {
+export const FacultyValidation = {
   createFacultyZodSchema,
   updateFacultyZodSchema,
 };
