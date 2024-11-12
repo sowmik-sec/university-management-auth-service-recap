@@ -7,6 +7,7 @@ import {
   IAcademicFacultyFilters,
 } from './academicFaculty.interface';
 import { AcademicFaculty } from './academicFaculty.model';
+import { IGenericResponse } from '../../../interfaces/common';
 
 const createFaculty = async (
   payload: IAcademicFaculty,
@@ -18,7 +19,7 @@ const createFaculty = async (
 const getAllFaculties = async (
   filters: IAcademicFacultyFilters,
   paginationOptions: IPaginationOptions,
-) => {
+): Promise<IGenericResponse<IAcademicFaculty[]>> => {
   const { searchTerm, ...filtersData } = filters;
   const { page, limit, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
