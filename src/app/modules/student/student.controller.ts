@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Request, Response } from 'express';
 import catchAsync from '../../../shared/catchAsync';
@@ -7,6 +8,7 @@ import pick from '../../../shared/pick';
 import { paginationFields } from '../../../constants/pagination';
 import { IStudent } from './student.interfact';
 import { studentFilterableFields } from './student.constant';
+import { StudentService } from './student.service';
 
 const getAllStudents = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, studentFilterableFields);
