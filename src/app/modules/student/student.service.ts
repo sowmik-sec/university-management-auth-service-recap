@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { IGenericResponse } from '../../../interfaces/common';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
@@ -5,6 +7,8 @@ import { SortOrder } from 'mongoose';
 import { IStudent, IStudentFilters } from './student.interfact';
 import { studentSearchableFields } from './student.constant';
 import { Student } from './student.model';
+import ApiError from '../../../errors/ApiError';
+import { StatusCodes } from 'http-status-codes';
 
 const getAllStudents = async (
   filters: IStudentFilters,
@@ -69,15 +73,36 @@ const getSingleStudent = async (id: string): Promise<IStudent | null> => {
     .populate('academicFaculty');
   return result;
 };
-// const updateStudent = async (
-//   id: string,
-//   payload: Partial<IStudent>,
-// ): Promise<IStudent | null> => {
-//   const result = await Student.findOneAndUpdate({ _id: id }, payload, {
-//     new: true,
-//   });
-//   return result;
-// };
+const updateStudent = async (
+  id: string,
+  payload: Partial<IStudent>,
+): Promise<IStudent | null> => {
+  const isExist = await Student.findOne({ id });
+  if (!isExist) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Student not found');
+  }
+  const { name, gurdian, localGuardian, ...studentData } = payload;
+  const updatedStudentData: Partial<IStudent> = { ...studentData };
+
+  /* const name = {
+    firstName: 'Haba'  ---> update firstName
+    lastName: 'Goba'
+    }
+    */
+  // dynamically handling
+
+  if (name && Object.keys(name).length > 0) {
+    Object.keys(name).forEach(key => {
+      const nameKey = `name.${key}`;
+      (updatedStudentData as any)[nameKey] = name[key as keyof typeof name];
+    });
+  }
+
+  const result = await Student.findOneAndUpdate({ _id: id }, payload, {
+    new: true,
+  });
+  return result;
+};
 
 const deleteStudent = async (id: string): Promise<IStudent | null> => {
   const result = await Student.findByIdAndDelete(id)
@@ -90,6 +115,6 @@ const deleteStudent = async (id: string): Promise<IStudent | null> => {
 export const StudentService = {
   getAllStudents,
   getSingleStudent,
-  //   updateStudent,
+  updateStudent,
   deleteStudent,
 };
