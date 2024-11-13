@@ -21,7 +21,7 @@ const getAllFaculties = async (
   paginationOptions: IPaginationOptions,
 ): Promise<IGenericResponse<IAcademicFaculty[]>> => {
   const { searchTerm, ...filtersData } = filters;
-  const { page, limit, sortBy, sortOrder } =
+  const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
   const andConditions = [];
 
@@ -56,7 +56,10 @@ const getAllFaculties = async (
   const whereConditions =
     andConditions.length > 0 ? { $and: andConditions } : {};
 
-  const result = await AcademicFaculty.find(whereConditions);
+  const result = await AcademicFaculty.find(whereConditions)
+    .sort(sortConditions)
+    .skip(skip)
+    .limit(limit);
 
   const total = await AcademicFaculty.countDocuments(whereConditions);
 
