@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { User } from './user.model';
 import { IUser } from './user.interface';
 import config from '../../../config';
@@ -23,7 +24,7 @@ const createStudent = async (
   const academicSemester = await AcademicSemester.findById(
     student.academicSemester,
   );
-
+  let newUserAllData = null;
   const session = await mongoose.startSession();
 
   try {
@@ -42,6 +43,9 @@ const createStudent = async (
     if (!newUser.length) {
       throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to create user');
     }
+
+    newUserAllData = newUser[0];
+
     await session.commitTransaction();
     await session.endSession();
   } catch (error) {
@@ -49,6 +53,23 @@ const createStudent = async (
     await session.endSession();
     throw error;
   }
+  if (newUserAllData) {
+    newUserAllData = await User.findOne({ id: newUserAllData.id }).populate({
+      path: 'student',
+      populate: [
+        {
+          path: 'academicSemester',
+        },
+        {
+          path: 'academicDepartment',
+        },
+        {
+          path: 'academicFaculty',
+        },
+      ],
+    });
+  }
+  return newUserAllData;
 };
 
 export const UserService = {
