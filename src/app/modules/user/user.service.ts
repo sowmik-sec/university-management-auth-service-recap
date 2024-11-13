@@ -2,7 +2,7 @@ import { User } from './user.model';
 import { IUser } from './user.interface';
 import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
-import { generateStudentId } from './user.utils';
+import { generateFacultyId, generateStudentId } from './user.utils';
 
 const createUser = async (user: IUser): Promise<IUser | null> => {
   // auto generated incremental id
@@ -10,7 +10,7 @@ const createUser = async (user: IUser): Promise<IUser | null> => {
     code: '01',
     year: '2025',
   };
-  const id = await generateStudentId(academicSemester);
+  const id = await generateFacultyId();
   user.id = id;
   // default password
 
