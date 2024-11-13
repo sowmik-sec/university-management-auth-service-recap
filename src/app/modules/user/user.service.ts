@@ -2,22 +2,26 @@ import { User } from './user.model';
 import { IUser } from './user.interface';
 import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
-import { generateFacultyId, generateStudentId } from './user.utils';
+import { IStudent } from '../student/student.interfact';
+import { AcademicSemester } from '../academicSemester/academicSemester.model';
+import { generateStudentId } from './user.utils';
 
-const createUser = async (user: IUser): Promise<IUser | null> => {
-  // auto generated incremental id
-  const academicSemester = {
-    code: '01',
-    year: '2025',
-  };
-  const id = await generateFacultyId();
-  user.id = id;
+const createStudent = async (
+  student: IStudent,
+  user: IUser,
+): Promise<IUser | null> => {
   // default password
-
   if (!user.password) {
-    user.password = config.default_user_pass as string;
+    user.password = config.default_student_pass as string;
   }
+  // set role
+  user.role = 'student';
 
+  const academicSemester = await AcademicSemester.findById(
+    student.academicSemester,
+  );
+  // generate student id
+  const id = await generateStudentId(academicSemester);
   const createdUser = await User.create(user);
   if (!createdUser) {
     throw new ApiError(400, 'Failed to create');
@@ -26,5 +30,5 @@ const createUser = async (user: IUser): Promise<IUser | null> => {
 };
 
 export const UserService = {
-  createUser,
+  createStudent,
 };
