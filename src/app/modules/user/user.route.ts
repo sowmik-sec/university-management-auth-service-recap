@@ -12,6 +12,11 @@ router.post(
 );
 
 // create faculty
+router.post(
+  '/create-faculty',
+  validateRequest(FacultyController.createFacultyZodSchema),
+  FacultyController.createFaculty,
+);
 
 // create admin
 
