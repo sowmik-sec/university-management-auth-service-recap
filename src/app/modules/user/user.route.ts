@@ -14,8 +14,8 @@ router.post(
 // create faculty
 router.post(
   '/create-faculty',
-  validateRequest(FacultyController.createFacultyZodSchema),
-  FacultyController.createFaculty,
+  validateRequest(UserValidation.createFacultyZodSchema),
+  UserController.createFaculty,
 );
 
 // create admin

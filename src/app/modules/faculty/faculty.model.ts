@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 import { FacultyModel, IFaculty } from './faculty.interfact';
-import { bloodGroup, gender } from '../student/student.constant';
+import { bloodGroup, gender } from './faculty.constant';
 
 export const facultySchema = new Schema<IFaculty, FacultyModel>(
   {
