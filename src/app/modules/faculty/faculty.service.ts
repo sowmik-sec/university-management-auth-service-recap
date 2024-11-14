@@ -3,12 +3,13 @@
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { IGenericResponse } from '../../../interfaces/common';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
-import { SortOrder } from 'mongoose';
+import mongoose, { SortOrder } from 'mongoose';
 import ApiError from '../../../errors/ApiError';
 import { StatusCodes } from 'http-status-codes';
 import { IFaculty, IFacultyFilters } from './faculty.interfact';
 import { facultySearchableFields } from './faculty.constant';
 import { Faculty } from './faculty.model';
+import { User } from '../user/user.model';
 
 const getAllFaculties = async (
   filters: IFacultyFilters,
@@ -49,7 +50,6 @@ const getAllFaculties = async (
     andConditions.length > 0 ? { $and: andConditions } : {};
 
   const result = await Faculty.find(whereCondition)
-    .populate('academicSemester')
     .populate('academicDepartment')
     .populate('academicFaculty')
     .sort(sortConditions)
@@ -68,7 +68,6 @@ const getAllFaculties = async (
 
 const getSingleFaculty = async (id: string): Promise<IFaculty | null> => {
   const result = await Faculty.findById(id)
-    .populate('academicSemester')
     .populate('academicDepartment')
     .populate('academicFaculty');
   return result;
@@ -99,16 +98,36 @@ const updateFaculty = async (
   }
   const result = await Faculty.findOneAndUpdate({ id }, updatedFacultyData, {
     new: true,
-  });
+  })
+    .populate('academicFaculty')
+    .populate('academicDepartment');
   return result;
 };
 
 const deleteFaculty = async (id: string): Promise<IFaculty | null> => {
-  const result = await Faculty.findByIdAndDelete(id)
-    .populate('academicSemester')
-    .populate('academicDepartment')
-    .populate('academicFaculty');
-  return result;
+  const isExist = await Faculty.findOne({ id });
+  if (!isExist) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Faculty not found !');
+  }
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+    //delete faculty first
+    const faculty = await Faculty.findOneAndDelete({ id }, { session });
+    if (!faculty) {
+      throw new ApiError(404, 'Failed to delete student');
+    }
+    //delete user
+    await User.deleteOne({ id });
+    await session.commitTransaction();
+    await session.endSession();
+
+    return faculty;
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  }
 };
 
 export const FacultyService = {
