@@ -5,7 +5,11 @@ import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
 import { IStudent } from '../student/student.interfact';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
-import { generateFacultyId, generateStudentId } from './user.utils';
+import {
+  generateAdminId,
+  generateFacultyId,
+  generateStudentId,
+} from './user.utils';
 import mongoose from 'mongoose';
 import { Student } from '../student/student.model';
 import { StatusCodes } from 'http-status-codes';
@@ -137,7 +141,7 @@ const createAdmin = async (admin: IAdmin, user: IUser) => {
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
-    const id = await generateFacultyId();
+    const id = await generateAdminId();
     user.id = id;
     admin.id = id;
     // array
