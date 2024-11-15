@@ -1,4 +1,7 @@
 import express from 'express';
+import validateRequest from '../../middlewares/validateRequest';
+import { ManagementDepartmentValidation } from './managementDepartment.validation';
+import { ManagementDepartmentController } from './managementDepartment.controller';
 
 const router = express.Router();
 
@@ -12,10 +15,7 @@ router.post(
 
 router.get('/', ManagementDepartmentController.getAllManagementDepartments);
 
-router.get(
-  '/:id',
-  ManagementDepartmentController.getSinglelManagementDepartment,
-);
+router.get('/:id', ManagementDepartmentController.getSingleDepartment);
 
 router.patch(
   '/:id',

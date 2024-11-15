@@ -4,7 +4,7 @@ import {
   ManagementDepartmentModel,
 } from './managementDepartment.interface';
 
-const DepartManagementSchema = new Schema<
+const ManagementDepartmentSchema = new Schema<
   IManagementDepartment,
   ManagementDepartmentModel
 >(
@@ -23,7 +23,7 @@ const DepartManagementSchema = new Schema<
   },
 );
 
-export const DepartManagement = model<
+export const ManagementDepartment = model<
   IManagementDepartment,
   ManagementDepartmentModel
->('DepartmentManagement', DepartManagementSchema);
+>('ManagementDepartment', ManagementDepartmentSchema);
