@@ -10,7 +10,7 @@ import {
 import { ManagementDepartment } from './managementDepartment.model';
 import { managementDepartmentSearchableFields } from './managementDepartment.constant';
 
-const createDepartment = async (
+const createManagementDepartment = async (
   payload: IManagementDepartment,
 ): Promise<IManagementDepartment | null> => {
   const result = await ManagementDepartment.create(payload);
@@ -74,14 +74,14 @@ const getAllManagementDepartments = async (
   };
 };
 
-const getSingleDepartment = async (
+const getSingleManagementDepartment = async (
   id: string,
 ): Promise<IManagementDepartment | null> => {
   const result = await ManagementDepartment.findById(id);
   return result;
 };
 
-const updateDepartment = async (
+const updateManagementDepartment = async (
   id: string,
   payload: Partial<IManagementDepartment>,
 ): Promise<IManagementDepartment | null> => {
@@ -95,7 +95,7 @@ const updateDepartment = async (
   return result;
 };
 
-const deleteDepartment = async (
+const deleteManagementDepartment = async (
   id: string,
 ): Promise<IManagementDepartment | null> => {
   const result = await ManagementDepartment.findByIdAndDelete(id);
@@ -103,9 +103,9 @@ const deleteDepartment = async (
 };
 
 export const ManagementDepartmentService = {
-  createDepartment,
+  createManagementDepartment,
   getAllManagementDepartments,
-  getSingleDepartment,
-  updateDepartment,
-  deleteDepartment,
+  getSingleManagementDepartment,
+  updateManagementDepartment,
+  deleteManagementDepartment,
 };

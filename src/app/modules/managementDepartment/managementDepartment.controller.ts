@@ -13,7 +13,7 @@ import { managementDepartmentFilterableFields } from './managementDepartment.con
 const createManagementDepartment = catchAsync(
   async (req: Request, res: Response) => {
     const { ...departmentData } = req.body;
-    const result = await ManagementDepartmentService.createDepartment(
+    const result = await ManagementDepartmentService.createManagementDepartment(
       departmentData as IManagementDepartment,
     );
     sendResponse<IManagementDepartment>(res, {
@@ -46,7 +46,8 @@ const getAllManagementDepartments = catchAsync(
 
 const getSingleDepartment = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
-  const result = await ManagementDepartmentService.getSingleDepartment(id);
+  const result =
+    await ManagementDepartmentService.getSingleManagementDepartment(id);
   sendResponse<IManagementDepartment>(res, {
     success: true,
     statusCode: StatusCodes.OK,
@@ -58,10 +59,10 @@ const getSingleDepartment = catchAsync(async (req: Request, res: Response) => {
 const updateManagementDepartment = catchAsync(
   async (req: Request, res: Response) => {
     const id = req.params.id;
-    const facultyData = req.body;
-    const result = await ManagementDepartmentService.updateDepartment(
+    const updatedData = req.body;
+    const result = await ManagementDepartmentService.updateManagementDepartment(
       id,
-      facultyData,
+      updatedData,
     );
     sendResponse<IManagementDepartment>(res, {
       success: true,
@@ -74,7 +75,8 @@ const updateManagementDepartment = catchAsync(
 
 const deleteDepartment = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
-  const result = await ManagementDepartmentService.deleteDepartment(id);
+  const result =
+    await ManagementDepartmentService.deleteManagementDepartment(id);
   sendResponse<IManagementDepartment>(res, {
     success: true,
     statusCode: StatusCodes.OK,
