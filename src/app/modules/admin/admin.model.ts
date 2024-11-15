@@ -64,6 +64,10 @@ export const adminSchema = new Schema<IAdmin, AdminModel>(
       ref: 'ManagementDepartment',
       required: true,
     },
+    designation: {
+      type: String,
+      required: true,
+    },
     profileImage: {
       type: String,
     },

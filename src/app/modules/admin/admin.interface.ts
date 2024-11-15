@@ -19,6 +19,7 @@ export type IAdmin = {
   presentAddress: string;
   permanentAddress: string;
   managementDepartment: Types.ObjectId | IManagementDepartment;
+  designation: string;
   profileImage?: string;
 };
 
