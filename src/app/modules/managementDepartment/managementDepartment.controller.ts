@@ -37,7 +37,7 @@ const getAllManagementDepartments = catchAsync(
     sendResponse<IManagementDepartment[]>(res, {
       success: true,
       statusCode: StatusCodes.OK,
-      message: 'Academic faculty fetched successfully',
+      message: 'Management Department fetched successfully',
       meta: result.meta,
       data: result.data,
     });
@@ -51,7 +51,7 @@ const getSingleDepartment = catchAsync(async (req: Request, res: Response) => {
   sendResponse<IManagementDepartment>(res, {
     success: true,
     statusCode: StatusCodes.OK,
-    message: 'Department retrieved successfully',
+    message: 'Management Department retrieved successfully',
     data: result,
   });
 });
@@ -67,7 +67,7 @@ const updateManagementDepartment = catchAsync(
     sendResponse<IManagementDepartment>(res, {
       success: true,
       statusCode: StatusCodes.OK,
-      message: 'Faculty updated successfully',
+      message: 'Management Department updated successfully',
       data: result,
     });
   },
@@ -80,7 +80,7 @@ const deleteDepartment = catchAsync(async (req: Request, res: Response) => {
   sendResponse<IManagementDepartment>(res, {
     success: true,
     statusCode: StatusCodes.OK,
-    message: 'Faculty deleted successfully',
+    message: 'Management Department deleted successfully',
     data: result,
   });
 });
