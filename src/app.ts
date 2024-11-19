@@ -4,7 +4,10 @@ import cors from 'cors';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import routers from './app/routes';
 import { StatusCodes } from 'http-status-codes';
+import cookieParser from 'cookie-parser';
+
 app.use(cors());
+app.use(cookieParser());
 
 //parser
 app.use(express.json());
