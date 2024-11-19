@@ -2,9 +2,10 @@
 import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../../errors/ApiError';
 import { User } from '../user/user.model';
-import { ILoginUser } from './auth.interface';
-import jwt from 'jsonwebtoken';
-const loginUser = async (payload: ILoginUser) => {
+import { ILoginUser, ILoginUserResponse } from './auth.interface';
+import config from '../../../config';
+import { jwtHelpers } from '../../../helpers/jwtHelpers';
+const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   const { id, password } = payload;
   // create instance of user
   const user = new User();
@@ -22,9 +23,26 @@ const loginUser = async (payload: ILoginUser) => {
   }
 
   // create access token
-  const accessToken = jwt.sign({ id: isUserExist.id, role: isUserExist.role });
+  const accessToken = jwtHelpers.createToken(
+    { id: isUserExist.id, role: isUserExist.role },
+    config.jwt.secret as string,
+    config.jwt.jwt_expires_in as string,
+  );
+  const refreshToken = jwtHelpers.createToken(
+    { id: isUserExist.id, role: isUserExist.role },
+    config.jwt.refresh_secret as string,
+    config.jwt.jwt_refresh_expires_id as string,
+  );
 
-  return {};
+  console.log(accessToken, refreshToken, isUserExist.needsPasswordChange);
+
+  const { needsPasswordChange } = isUserExist;
+
+  return {
+    accessToken,
+    refreshToken,
+    needsPasswordChange,
+  };
 };
 
 export const AuthService = {
