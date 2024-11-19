@@ -13,4 +13,12 @@ export type IUser = {
   admin?: Types.ObjectId | IAdmin; // It has to to done in future
 };
 
-export type UserModel = Model<IUser, Record<string, unknown>>;
+interface IUserMethods {
+  isUserExist(id: string): Promise<boolean>;
+  isPasswordMatched(
+    givenPassword: string,
+    savedPassword: string,
+  ): Promise<boolean>;
+}
+
+export type UserModel = Model<IUser, Record<string, unknown>, IUserMethods>;
