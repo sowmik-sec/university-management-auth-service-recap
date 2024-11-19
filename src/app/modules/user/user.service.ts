@@ -28,12 +28,6 @@ const createStudent = async (
     user.password = config.default_student_pass as string;
   }
 
-  // hash password
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds),
-  );
-
   // set role
   user.role = 'student';
 
@@ -93,6 +87,7 @@ const createFaculty = async (faculty: IFaculty, user: IUser) => {
   if (!user.password) {
     user.password = config.default_faculty_pass as string;
   }
+
   // set role
   user.role = 'faculty';
   let newUserAllData = null;
