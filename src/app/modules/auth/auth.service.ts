@@ -3,11 +3,12 @@ import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../../errors/ApiError';
 import { User } from '../user/user.model';
 import { ILoginUser } from './auth.interface';
-import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 const loginUser = async (payload: ILoginUser) => {
   const { id, password } = payload;
+  // create instance of user
   const user = new User();
-
+  // access to our instance methods
   const isUserExist = await user.isUserExist(id);
   if (!isUserExist) {
     throw new ApiError(StatusCodes.NOT_FOUND, 'User not found');
@@ -21,6 +22,7 @@ const loginUser = async (payload: ILoginUser) => {
   }
 
   // create access token
+  const accessToken = jwt.sign({ id: isUserExist.id, role: isUserExist.role });
 
   return {};
 };
