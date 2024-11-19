@@ -3,6 +3,7 @@ import validateRequest from '../../middlewares/validateRequest';
 import { FacultyValidation } from './academicFaculty.validation';
 import { FacultyController } from './academicFaculty.controller';
 import { Enum_USER_ROLE } from '../../../enums/user';
+import auth from '../../middlewares/auth';
 
 const router = express.Router();
 

@@ -5,14 +5,13 @@ import { StatusCodes } from 'http-status-codes';
 import { jwtHelpers } from '../../helpers/jwtHelpers';
 import config from '../../config';
 import { Secret } from 'jsonwebtoken';
-import { Enum_USER_ROLE } from '../../enums/user';
 
-interface MyRequest extends Request {
-  user: {
-    role: Enum_USER_ROLE;
-    userId: string;
-  };
-}
+// interface MyRequest extends Request {
+//   user: {
+//     role: Enum_USER_ROLE;
+//     userId: string;
+//   };
+// }
 
 const auth =
   (...requiredRoles: string[]) =>
@@ -25,18 +24,14 @@ const auth =
       }
 
       let verifiedUser = null;
-      try {
-        // verify token
-        verifiedUser = jwtHelpers.verifyToken(
-          token,
-          config.jwt.secret as Secret,
-        );
-      } catch (err) {
-        throw new ApiError(StatusCodes.FORBIDDEN, 'Invalid token');
-      }
+      // verify token
+      verifiedUser = jwtHelpers.verifyToken(token, config.jwt.secret as Secret);
 
       req.user = verifiedUser;
+      next();
     } catch (error) {
       next(error);
     }
   };
+
+export default auth;
