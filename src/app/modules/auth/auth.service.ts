@@ -1,11 +1,16 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../../errors/ApiError';
 import { User } from '../user/user.model';
-import { ILoginUser, ILoginUserResponse } from './auth.interface';
+import {
+  ILoginUser,
+  ILoginUserResponse,
+  IRefreshTokenResponse,
+} from './auth.interface';
 import config from '../../../config';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
-import jwt from 'jsonwebtoken';
+import { Secret } from 'jsonwebtoken';
 const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   const { id, password } = payload;
   // create instance of user
@@ -44,22 +49,33 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   };
 };
 
-const refreshToken = async (token: string) => {
+const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
   let verifiedToken = null;
   // verify token
   try {
-    verifiedToken = jwt.verify(token, config.jwt.refresh_secret);
+    verifiedToken = jwtHelpers.verifyToken(
+      token,
+      config.jwt.refresh_secret as Secret,
+    );
   } catch (err) {
     throw new ApiError(StatusCodes.FORBIDDEN, `Invalid access token, ${err}`);
   }
 
-  const { userId, role } = verifiedToken;
+  const { id } = verifiedToken;
   const user = new User();
-  const isUserExist = await user.isUserExist(userId as string);
+  const isUserExist = await user.isUserExist(id as string);
   if (!isUserExist) {
-    throw new ApiError(StatusCodes.NOT_FOUND, 'User does not');
+    throw new ApiError(StatusCodes.NOT_FOUND, 'User does not exist');
   }
   // generate new token
+  const newAccessToken = jwtHelpers.createToken(
+    { id: isUserExist.id, role: isUserExist.role },
+    config.jwt.secret as Secret,
+    config.jwt.jwt_expires_in as string,
+  );
+  return {
+    accessToken: newAccessToken,
+  };
 };
 
 export const AuthService = {
