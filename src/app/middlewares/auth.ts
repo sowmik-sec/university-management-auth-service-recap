@@ -8,7 +8,7 @@ import { Secret } from 'jsonwebtoken';
 
 const auth =
   (...requiredRoles: string[]) =>
-  async (req: Request, res: Response, next: NextFunction) => {
+  (req: Request, res: Response, next: NextFunction) => {
     try {
       // get authorization token
       const token = req.headers.authorization;

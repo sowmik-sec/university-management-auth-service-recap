@@ -19,10 +19,6 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   };
   res.cookie('refreshToken', refreshToken, cookieOptions);
 
-  if ('refreshToken' in result) {
-    delete result.refreshToken;
-  }
-
   sendResponse<ILoginUserResponse>(res, {
     statusCode: StatusCodes.OK,
     success: true,
