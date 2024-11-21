@@ -2,6 +2,8 @@ import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../../errors/ApiError';
 import { User } from '../user/user.model';
 import { ILoginUser } from './auth.interface';
+import jwt from 'jsonwebtoken';
+import config from '../../../config';
 
 const loginUser = async (payload: ILoginUser) => {
   const { id, password } = payload;
@@ -19,7 +21,13 @@ const loginUser = async (payload: ILoginUser) => {
   }
 
   // create access token
-  console.log('create token');
+  const accessToken = jwt.sign(
+    {
+      id: isUserExist.id,
+      role: isUserExist.role,
+    },
+    config.jwt.secret as string,
+  );
 
   return {
     isUserExist,
