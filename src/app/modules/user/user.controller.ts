@@ -7,7 +7,6 @@ import sendResponse from '../../../shared/sendResponse';
 import { StatusCodes } from 'http-status-codes';
 
 const createStudent = catchAsync(async (req: Request, res: Response) => {
-  console.log(req.cookies, 'cookie');
   const { student, ...userData } = req.body;
   const result = await UserService.createStudent(student, userData);
 
