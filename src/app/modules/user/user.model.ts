@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 import { Schema, model } from 'mongoose';
 import { IUser, IUserMethods, UserModel } from './user.interface';
+import bcrypt from 'bcrypt';
+import config from '../../../config';
 const userSchema = new Schema<IUser, Record<string, unknown>, IUserMethods>(
   {
     id: {
@@ -37,5 +39,16 @@ const userSchema = new Schema<IUser, Record<string, unknown>, IUserMethods>(
     },
   },
 );
+
+userSchema.pre('save', async function (next) {
+  // hash user password
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+
+  next();
+});
 
 export const User = model<IUser, UserModel>('User', userSchema);
