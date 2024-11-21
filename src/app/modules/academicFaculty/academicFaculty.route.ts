@@ -15,7 +15,7 @@ router.post(
 );
 router.get(
   '/:id',
-  auth(Enum_USER_ROLE.ADMIN, Enum_USER_ROLE.FACULTY, Enum_USER_ROLE.FACULTY),
+  auth(Enum_USER_ROLE.ADMIN, Enum_USER_ROLE.FACULTY, Enum_USER_ROLE.STUDENT),
   FacultyController.getSingleFaculty,
 );
 router.patch(
@@ -26,12 +26,16 @@ router.patch(
 );
 router.delete(
   '/:id',
-  auth(Enum_USER_ROLE.ADMIN),
+  auth(Enum_USER_ROLE.ADMIN, Enum_USER_ROLE.SUPER_ADMIN),
   FacultyController.deleteFaculty,
 );
 router.get(
   '/',
-  auth(Enum_USER_ROLE.ADMIN, Enum_USER_ROLE.SUPER_ADMIN),
+  auth(
+    Enum_USER_ROLE.ADMIN,
+    Enum_USER_ROLE.SUPER_ADMIN,
+    Enum_USER_ROLE.STUDENT,
+  ),
   FacultyController.getAllFaculties,
 );
 
