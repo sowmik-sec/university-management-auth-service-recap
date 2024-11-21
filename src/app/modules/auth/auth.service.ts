@@ -5,19 +5,21 @@ import { ILoginUser } from './auth.interface';
 
 const loginUser = async (payload: ILoginUser) => {
   const { id, password } = payload;
-  const user = new User();
   // check user existence
-  const isUserExist = await user.isUserExist(id);
+  const isUserExist = await User.isUserExist(id);
   if (!isUserExist) {
     throw new ApiError(StatusCodes.NOT_FOUND, 'User does not exist');
   }
+
   if (
     isUserExist.password &&
-    !user.isPasswordMatched(password, isUserExist.password)
+    !(await User.isPasswordMatched(password, isUserExist?.password))
   ) {
     throw new ApiError(StatusCodes.UNAUTHORIZED, 'Password is incorrect');
   }
+
   // create access token
+  console.log('create token');
 
   return {
     isUserExist,
