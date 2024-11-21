@@ -34,8 +34,6 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
     config.jwt.jwt_refresh_expires_id as string,
   );
 
-  console.log(accessToken, refreshToken, isUserExist.needsPasswordChange);
-
   return {
     accessToken,
     refreshToken,
