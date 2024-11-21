@@ -2,29 +2,26 @@ import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../../errors/ApiError';
 import { User } from '../user/user.model';
 import { ILoginUser } from './auth.interface';
-import bcrypt from 'bcrypt';
 
 const loginUser = async (payload: ILoginUser) => {
   const { id, password } = payload;
+  const user = new User();
   // check user existence
-  const isUserExist = await User.findOne(
-    { id },
-    { id: 1, password: 1, needsPasswordChange: 1 },
-  ).lean();
+  const isUserExist = await user.isUserExist(id);
   if (!isUserExist) {
     throw new ApiError(StatusCodes.NOT_FOUND, 'User does not exist');
   }
-  // match password
-  const isPasswordMatched = await bcrypt.compare(
-    password,
-    isUserExist.password,
-  );
-  if (!isPasswordMatched) {
+  if (
+    isUserExist.password &&
+    !user.isPasswordMatched(password, isUserExist.password)
+  ) {
     throw new ApiError(StatusCodes.UNAUTHORIZED, 'Password is incorrect');
   }
   // create access token
 
-  return {};
+  return {
+    isUserExist,
+  };
 };
 
 export const AuthService = {
