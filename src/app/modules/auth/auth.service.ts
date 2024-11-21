@@ -5,6 +5,7 @@ import { ILoginUser, ILoginUserResponse } from './auth.interface';
 import { Secret } from 'jsonwebtoken';
 import config from '../../../config';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
+import jwt from 'jsonwebtoken';
 
 const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   const { id, password } = payload;
@@ -41,6 +42,25 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   };
 };
 
+const refreshToken = async (token: string) => {
+  // verify token
+  let verifiedToken = null;
+  try {
+    verifiedToken = jwt.verify(token, config.jwt.refresh_secret);
+    console.log(verifiedToken);
+  } catch (error) {
+    throw new ApiError(StatusCodes.FORBIDDEN, 'Invalid refresh token');
+  }
+  // check deleted user's refresh token
+  const { userId, role } = verifiedToken;
+  const isUserExist = await User.isUserExist(userId);
+  if (!isUserExist) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'User does not exist');
+  }
+  // generate new token
+};
+
 export const AuthService = {
   loginUser,
+  refreshToken,
 };
