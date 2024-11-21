@@ -17,17 +17,11 @@ const auth =
       }
       // verify token
       let verifiedUser = null;
-      try {
-        verifiedUser = jwtHelpers.verifyToken(
-          token,
-          config.jwt.secret as Secret,
-        );
-        console.log(verifiedUser);
-      } catch (err) {
-        throw new ApiError(StatusCodes.FORBIDDEN, `Invalid token ${err}`);
-      }
+      verifiedUser = jwtHelpers.verifyToken(token, config.jwt.secret as Secret);
+      console.log(verifiedUser);
 
-      req.user = verifiedUser;
+      req.user = verifiedUser; // role , userId
+      next();
     } catch (error) {
       next(error);
     }

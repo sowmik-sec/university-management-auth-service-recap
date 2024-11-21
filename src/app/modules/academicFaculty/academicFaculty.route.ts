@@ -29,6 +29,10 @@ router.delete(
   auth(Enum_USER_ROLE.ADMIN),
   FacultyController.deleteFaculty,
 );
-router.get('/', FacultyController.getAllFaculties);
+router.get(
+  '/',
+  auth(Enum_USER_ROLE.ADMIN, Enum_USER_ROLE.SUPER_ADMIN),
+  FacultyController.getAllFaculties,
+);
 
 export const AcademicFacultyRoutes = router;
