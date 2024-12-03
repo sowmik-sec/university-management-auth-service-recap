@@ -51,7 +51,10 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
   // verify token
   let verifiedToken = null;
   try {
-    verifiedToken = jwtHelpers.verifyToken(token, config.jwt.secret as Secret);
+    verifiedToken = jwtHelpers.verifyToken(
+      token,
+      config.jwt.refresh_secret as Secret,
+    );
     console.log(verifiedToken);
   } catch (err) {
     throw new ApiError(StatusCodes.FORBIDDEN, `Invalid refresh token ${err}`);
